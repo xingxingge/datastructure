@@ -177,6 +177,7 @@ public class ListSLinked<E> implements List<E> {
   //单链表倒换
   public ListSLinked<E> reverse() {
     SLNode<E> node = this.head.getNext();
+
     SLNode<E> p1 = null;
     SLNode<E> p2 = node;
     while (p2 != null) {
@@ -188,5 +189,72 @@ public class ListSLinked<E> implements List<E> {
     this.head.setNext(p1);
     return this;
   }
+
+  //单链表倒换
+  public ListSLinked<E> reverse2() {
+    /**
+     * node:总是指向开始那个头结点
+     * p:待移动到头部的节点
+     * 每次处理，把p节点移动到头部，让node指向p的下一节点
+     *
+     */
+
+    SLNode<E> node = this.head.getNext();//基础节点
+    if (node == null) return this;
+    SLNode<E> p = node.getNext();
+    while (p != null) {
+      node.setNext(p.getNext());
+      p.setNext(head.getNext());
+      head.setNext(p);
+      p = node.getNext();
+    }
+    return this;
+  }
+
+  /**
+   * 判断链表是否有环
+   * @return
+   */
+  public boolean hasCycle() {
+    SLNode<E> meet = getCycleMeet();
+    if (meet == null) return false;
+    else return true;
+
+
+  }
+
+  private  SLNode<E> getCycleMeet() {
+    SLNode<E> slow = head.getNext();//慢指针
+    if (slow == null) return null;
+    SLNode<E> fast = head.getNext();//快指针
+    while (slow.getNext() != null && fast.getNext() != null) {
+      slow = slow.getNext();
+      fast = fast.getNext().getNext();
+      if (slow == fast) {
+        break;
+      }
+    }
+    if (slow != fast) return null;
+    return slow;
+
+  }
+
+  /**
+   * 找到有环链表出现环的地方
+   * @return
+   */
+  public SLNode detectCycle() {
+    SLNode<E> slow = getCycleMeet();
+    if (slow==null)return null;
+    SLNode<E> fast=slow;
+    slow = head.getNext();
+    while (slow != fast) {
+      slow = slow.getNext();
+      fast = fast.getNext();
+    }
+    return slow;
+
+  }
+
 
 }
